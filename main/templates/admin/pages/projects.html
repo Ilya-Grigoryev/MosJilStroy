@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Наши проекты</title>
+</head>
+<body>
+{% include 'admin/header.html' %}
+{% include 'admin/navbar.html' %}
+<div class="mx-5">
+    <div class="col-auto p-0 mx-3 add-proj-card">
+        <div data-bs-toggle="modal"
+             data-bs-target="#add_proj_modal">
+            <div class="row">
+                <div class="col-auto">
+                    <img class="add-proj-img" src="{% static 'images/set-project.svg' %}">
+                </div>
+                <div class="col">
+                    <p class="add-proj-text">Добавить новый проект</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="add_proj_modal" tabindex="-1"
+         aria-labelledby="modal_label" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modal_label">Добавить новый проект</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+              <form action="{% url 'admin-projects' %}" method="post" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  {{ form.address }}
+                  <div class="row" style="margin-top: 10px">
+                      <div class="col-sm">
+                          {{ form.group }}
+                      </div>
+                      <div class="col-sm">
+                          {{ form.storeys }}
+                      </div>
+                      <div class="col-sm">
+                          {{ form.construction_year }}
+                      </div>
+                  </div>
+{#                  <div class="row">#}
+{#                      <div class="col-sm">#}
+{#                          <p style="margin-top: 15px; font-size: 18px; color: #414141;">Начало ремонта:</p>#}
+{#                      </div>#}
+{#                      <div class="col-sm">#}
+{#                          <input name="start_date" type="date" required#}
+{#                                     class="form-control text-input" style="margin-top: 10px"#}
+{#                                     placeholder="Начало ремонта">#}
+{#                      </div>#}
+{#                      <div class="col-sm">#}
+{#                          <p style="margin-top: 15px; font-size: 18px; color: #414141;">Конец ремонта:</p>#}
+{#                      </div>#}
+{#                      <div class="col-sm">#}
+{#                          <input name="end_date" type="date" required#}
+{#                                     class="form-control text-input" style="margin-top: 10px"#}
+{#                                     placeholder="Начало ремонта">#}
+{#                      </div>#}
+{#                  </div>#}
+                  {{ form.description }}
+                  {{ form.short_description }}
+                  <div class="row">
+                      <div class="col-auto">
+                          <p style="margin-top: 15px; font-size: 18px; color: #414141;">Титульное изображение:</p>
+                      </div>
+                      <div class="col">
+                          {{ form.image }}
+                      </div>
+                  </div>
+                  <img class="img-input" id="add-img-show" src="" alt="">
+                  <button type="submit" class="btn submit-btn">Добавить</button>
+              </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br><br>
+    <div class="title">
+        Текущие проекты
+    </div>
+    <br>
+    <div class="row mx-1">
+        {% for project in current %}
+        <div class="col-md-auto">
+            <button type="button" class="btn btn-primary photos-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#photos_modal{{ project.id }}">
+                Фотоальбом
+            </button>
+            <div class="card px-0 mx-3"
+                 data-bs-toggle="modal"
+                 data-bs-target="#edit_modal{{ project.id }}">
+                <img src="{{ project.image }}" class="card-img-top proj-img">
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.address}}</h5>
+{#                    <p class="card-text">{{ project.start_date }} - {{ project.end_date }}</p>#}
+                    <hr>
+                    <p class="short-desc">{{ project.short_description }}</p>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="photos_modal{{ project.id }}" tabindex="-1"
+             aria-labelledby="photos_modal_label" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="photos_modal_label">Фотоальбом <u><i>{{ project.address }}</i></u></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-center">
+                  <div class="row">
+                      <div class="col-auto">
+                          <p style="margin-top: 15px; font-size: 18px; color: #414141;">Добавить фотографию:</p>
+                      </div>
+                      <div class="col">
+                          <input id="photo_load{{ project.id }}" name="image" type="file" style="margin-top: 10px"
+                                 class="form-control text-input" accept="image/*" placeholder="Фотография">
+                      </div>
+                  </div>
+                <div id="photos_container{{ project.id }}" class="row justify-left">
+                    {% for photo in project.photos %}
+                        <div class="col-auto" id="photo{{ photo.id }}">
+                            <img src="{{ photo.url }}" class="img-input">
+                            <button type="button" onclick="del_photo('{{ photo.id }}')"
+                                    class="btn-close img-delete-btn" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="edit_modal{{ project.id }}" tabindex="-1"
+             aria-labelledby="edit_modal_label" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="edit_modal_label">Редактирование</h5>
+                  <form action="{% url 'admin-delete-projects' %}" method="post">
+                      {% csrf_token %}
+                      <input name="project_id" type="text" value="{{ project.id }}" hidden>
+                      <button type="submit" class="btn mx-3 delete-btn btn-danger">Удалить</button>
+                  </form>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-center">
+                  <form action="{% url 'admin-edit-projects' %}" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <input name="address" type="text"
+                             class="form-control text-input"
+                             placeholder="Адресс" value="{{ project.address }}">
+                      <div class="row" style="margin-top: 10px">
+                          <div class="col-sm">
+                              <select name="group" class="form-control text-input">
+                                  <option {% if project.group == 0 %} selected {% endif %}>
+                                      Текущий проект
+                                  </option>
+                                  <option {% if project.group == 1 %} selected {% endif %}>
+                                      Сданный объект
+                                  </option>
+                              </select>
+                          </div>
+                          <div class="col-sm">
+                              <input name="storeys" type="number"
+                                     class="form-control text-input"
+                                     placeholder="Кол-во этажей" value="{{ project.storeys }}">
+                          </div>
+                          <div class="col-sm">
+                              <input name="construction_year" type="number"
+                                     class="form-control text-input"
+                                     placeholder="Год постройки" value="{{ project.construction_year }}">
+                          </div>
+                      </div>
+{#                      <div class="row">#}
+{#                          <div class="col-sm">#}
+{#                              <p style="margin-top: 15px; font-size: 18px; color: #414141;">Начало ремонта:</p>#}
+{#                          </div>#}
+{#                          <div class="col-sm">#}
+{#                              <input name="start_date" type="date"#}
+{#                                     class="form-control text-input" style="margin-top: 10px"#}
+{#                                     placeholder="Начало ремонта" value="{{ project.start_value_date }}">#}
+{#                          </div>#}
+{#                          <div class="col-sm">#}
+{#                              <p style="margin-top: 15px; font-size: 18px; color: #414141;">Конец ремонта:</p>#}
+{#                          </div>#}
+{#                          <div class="col-sm">#}
+{#                              <input name="end_date" type="date"#}
+{#                                     class="form-control text-input" style="margin-top: 10px"#}
+{#                                     placeholder="Начало ремонта" value="{{ project.end_value_date }}">#}
+{#                          </div>#}
+{#                      </div>#}
+                      <textarea name="description" style="height: 200px; margin-top: 10px"
+                                class="form-control text-input" placeholder="Описание"
+                      >{{ project.description }}</textarea>
+                      <textarea name="short_description" style="height: 100px; margin-top: 10px"
+                                class="form-control text-input" placeholder="Краткое описание"
+                      >{{ project.short_description }}</textarea>
+                      <div class="row">
+                          <div class="col-auto">
+                              <p style="margin-top: 15px; font-size: 18px; color: #414141;">Титульное изображение:</p>
+                          </div>
+                          <div class="col">
+                              <input id="img_load{{ project.id }}" name="image" type="file" style="margin-top: 10px"
+                                     class="form-control text-input" accept="image/*" placeholder="Фотография">
+                          </div>
+                      </div>
+                      <img src="{{ project.image }}" id="img_show{{ project.id }}" class="img-input">
+                      <input name="subject_id" type="text" value="{{ project.id }}" hidden>
+                      <br>
+                      <button type="submit" class="btn submit-btn">Сохранить</button>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+    </div>
+    <br><br>
+    <div class="title">
+        Сданные объекты
+    </div>
+    <br>
+    <div class="row mx-1">
+        {% for project in past %}
+        <div class="col-md-auto">
+            <button type="button" class="btn btn-primary photos-btn"
+                    data-bs-toggle="modal"
+                    data-bs-target="#photos_modal{{ project.id }}">
+                Фотоальбом
+            </button>
+            <div class="card px-0 mx-3"
+                 data-bs-toggle="modal"
+                 data-bs-target="#edit_modal{{ project.id }}">
+                <img src="{{ project.image }}" class="card-img-top proj-img">
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.address}}</h5>
+{#                    <p class="card-text">{{ project.start_date }} - {{ project.end_date }}</p>#}
+                    <hr>
+                    <p class="short-desc">{{ project.short_description }}</p>
+                    <hr>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="photos_modal{{ project.id }}" tabindex="-1"
+             aria-labelledby="photos_modal_label" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="photos_modal_label">Фотоальбом <u><i>{{ project.address }}</i></u></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-center">
+                  <div class="row">
+                      <div class="col-auto">
+                          <p style="margin-top: 15px; font-size: 18px; color: #414141;">Добавить фотографию:</p>
+                      </div>
+                      <div class="col">
+                          <input id="photo_load{{ project.id }}" name="image" type="file" style="margin-top: 10px"
+                                 class="form-control text-input" accept="image/*" placeholder="Фотография">
+                      </div>
+                  </div>
+                <div id="photos_container{{ project.id }}" class="row justify-left">
+                    {% for photo in project.photos %}
+                        <div class="col-auto" id="photo{{ photo.id }}">
+                            <img src="{{ photo.url }}" class="img-input">
+                            <button type="button" onclick="del_photo('{{ photo.id }}')"
+                                    class="btn-close img-delete-btn" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal fade" id="edit_modal{{ project.id }}" tabindex="-1"
+             aria-labelledby="edit_modal_label" aria-hidden="true">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="edit_modal_label">Редактирование</h5>
+                  <form action="{% url 'admin-delete-projects' %}" method="post">
+                      {% csrf_token %}
+                      <input name="project_id" type="text" value="{{ project.id }}" hidden>
+                      <button type="submit" class="btn mx-3 delete-btn btn-danger">Удалить</button>
+                  </form>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-center">
+                  <form action="{% url 'admin-edit-projects' %}" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <input name="address" type="text"
+                             class="form-control text-input"
+                             placeholder="Адресс" value="{{ project.address }}">
+                      <div class="row" style="margin-top: 10px">
+                          <div class="col-sm">
+                              <select name="group" class="form-control text-input">
+                                  <option {% if project.group == 0 %} selected {% endif %}>
+                                      Текущий проект
+                                  </option>
+                                  <option {% if project.group == 1 %} selected {% endif %}>
+                                      Сданный объект
+                                  </option>
+                              </select>
+                          </div>
+                          <div class="col-sm">
+                              <input name="storeys" type="number"
+                                     class="form-control text-input"
+                                     placeholder="Кол-во этажей" value="{{ project.storeys }}">
+                          </div>
+                          <div class="col-sm">
+                              <input name="construction_year" type="number"
+                                     class="form-control text-input"
+                                     placeholder="Год постройки" value="{{ project.construction_year }}">
+                          </div>
+                      </div>
+{#                      <div class="row">#}
+{#                          <div class="col-sm">#}
+{#                              <p style="margin-top: 15px; font-size: 18px; color: #414141;">Начало ремонта:</p>#}
+{#                          </div>#}
+{#                          <div class="col-sm">#}
+{#                              <input name="start_date" type="date"#}
+{#                                     class="form-control text-input" style="margin-top: 10px"#}
+{#                                     placeholder="Начало ремонта" value="{{ project.start_value_date }}">#}
+{#                          </div>#}
+{#                          <div class="col-sm">#}
+{#                              <p style="margin-top: 15px; font-size: 18px; color: #414141;">Конец ремонта:</p>#}
+{#                          </div>#}
+{#                          <div class="col-sm">#}
+{#                              <input name="end_date" type="date"#}
+{#                                     class="form-control text-input" style="margin-top: 10px"#}
+{#                                     placeholder="Начало ремонта" value="{{ project.end_value_date }}">#}
+{#                          </div>#}
+{#                      </div>#}
+                      <textarea name="description" style="height: 200px; margin-top: 10px"
+                                class="form-control text-input" placeholder="Описание"
+                      >{{ project.description }}</textarea>
+                      <textarea name="short_description" style="height: 100px; margin-top: 10px"
+                                class="form-control text-input" placeholder="Краткое описание"
+                      >{{ project.short_description }}</textarea>
+                      <div class="row">
+                          <div class="col-auto">
+                              <p style="margin-top: 15px; font-size: 18px; color: #414141;">Титульное изображение:</p>
+                          </div>
+                          <div class="col">
+                              <input id="img_load{{ project.id }}" name="image" type="file" style="margin-top: 10px"
+                                     class="form-control text-input" accept="image/*" placeholder="Фотография">
+                          </div>
+                      </div>
+                      <img src="{{ project.image }}" id="img_show{{ project.id }}" class="img-input">
+                      <input name="subject_id" type="text" value="{{ project.id }}" hidden>
+                      <br>
+                      <button type="submit" class="btn submit-btn">Сохранить</button>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<br>
+{% include 'footer.html' %}
+</body>
+
+<script>
+    $("#add-img-load").change(function () {
+        if (this.files && this.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#add-img-show').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    function del_photo(img_id) {
+        let form_data = new FormData();
+        form_data.append("img_id", img_id);
+        form_data.append("csrfmiddlewaretoken", '{{ csrf_token }}');
+        $.ajax({
+         url: '{% url 'admin-del-photo-projects' %}',
+         type: 'post',
+         data: form_data,
+         dataType: 'json',
+         contentType: false,
+         processData: false,
+         success: () => {
+             $( `#photo${img_id}` ).remove();
+         }
+        });
+    }
+
+    {% for project in current %}
+    $("#photo_load{{ project.id }}").change(function() {
+        if (this.files && this.files[0]) {
+            let form_data = new FormData();
+            form_data.append("image", document.getElementById('photo_load{{ project.id }}').files[0]);
+            form_data.append("project_id", '{{ project.id }}');
+            form_data.append("csrfmiddlewaretoken", '{{ csrf_token }}');
+            $.ajax({
+             url: '{% url 'admin-add-photo-projects' %}',
+             type: 'post',
+             data: form_data,
+             dataType: 'json',
+             contentType: false,
+             processData: false,
+             success: (response) => {
+                 let url = response.url;
+                 let id = response.id;
+                 $('#photos_container{{ project.id }}').append(
+                     '<div class="col-auto" id="photo'+id+'">\
+                            <img src="'+url+'" class="img-input">\
+                            <button type="button" onclick="del_photo(`'+id+'`)"\
+                                    class="btn-close img-delete-btn" aria-label="Close"></button>\
+                        </div>'
+                 )
+             }
+            });
+        }
+    });
+    {% endfor %}
+
+    {% for project in past %}
+    $("#photo_load{{ project.id }}").change(function() {
+        if (this.files && this.files[0]) {
+            let form_data = new FormData();
+            form_data.append("image", document.getElementById('photo_load{{ project.id }}').files[0]);
+            form_data.append("project_id", '{{ project.id }}');
+            form_data.append("csrfmiddlewaretoken", '{{ csrf_token }}');
+            $.ajax({
+             url: '{% url 'admin-add-photo-projects' %}',
+             type: 'post',
+             data: form_data,
+             dataType: 'json',
+             contentType: false,
+             processData: false,
+             success: (response) => {
+                 let url = response.url;
+                 let id = response.id;
+                 $('#photos_container{{ project.id }}').append(
+                     '<div class="col-auto" id="photo'+id+'">\
+                            <img src="'+url+'" class="img-input">\
+                            <button type="button" onclick="del_photo(`'+id+'`)"\
+                                    class="btn-close img-delete-btn" aria-label="Close"></button>\
+                        </div>'
+                 )
+             }
+            });
+        }
+    });
+    {% endfor %}
+
+    {% for project in current %}
+    $("#img_load{{ project.id }}").change(function () {
+        if (this.files && this.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#img_show{{ project.id }}').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    {% endfor %}
+    {% for project in past %}
+    $("#img_load{{ project.id }}").change(function () {
+        if (this.files && this.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#img_show{{ project.id }}').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    {% endfor %}
+</script>
+
+<style>
+    .add-proj-card{
+        height: 50px;
+        width: 30vw;
+        cursor: pointer;
+        text-align: center;
+        align-items: center;
+        margin-top: 20px;
+        background-color: #a2a2a2;
+        border: 1px solid gray;
+        border-radius: 3px;
+        transition: 0.3s;
+    }
+    .add-proj-card:hover{
+        background-color: #797979;
+    }
+    .add-proj-img{
+        height: 30px;
+        margin: 10px;
+    }
+    .add-proj-text {
+        font-family: Crimson Text, serif;
+        text-align: center;
+        margin-top: 8px;
+        font-size: 20px;
+        color: #454545;
+    }
+    .img-delete-btn {
+        position: relative;
+        top: -4.8em;
+        right: 30px;
+        background-color: white;
+    }
+    .photos-btn {
+        width: 600px;
+        margin-left: 15px;
+        margin-top: 20px;
+        margin-bottom: 5px;
+    }
+    .img-input {
+        max-width: 300px;
+        height: 200px;
+        margin-top: 10px;
+        object-fit: cover;
+    }
+    .submit-btn {
+        width: 100%;
+        cursor: pointer;
+        font-family: Poppins serif;
+        font-weight: 500;
+        font-size: 18px;
+        text-align: center;
+        vertical-align: middle;
+        letter-spacing: 0.01em;
+        background-color: #4A71A7;
+        color: #DDEBFF;
+        height: 38px;
+        margin: 10px 0;
+        border-radius: 0;
+        padding-top: 5px;
+        border: 1px solid #253B5A;
+        transition: 0.2s;
+    }
+    .submit-btn:hover {
+        background-color: #5A8CD1;
+        color: #ffffff;
+    }
+    .text-input {
+        border-radius: 0;
+        background-color: #EEEEEE;
+    }
+    .modal-content {
+        border-radius: 0;
+        border: 1px solid #789EA2;
+        box-sizing: border-box;
+        box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+    }
+    .set-image {
+        height: 200px;
+        object-fit: cover;
+    }
+    .title {
+        font-family: Acme serif;
+        font-size: 36px;
+        width: 50%;
+        height: 47px;
+        border-bottom: 1px groove #3e3e3e;
+    }
+    .card {
+        width: 600px;
+        height: 400px;
+        border-radius: 15px;
+        overflow: hidden;
+        border: 1px solid #0F2647;
+        cursor: pointer;
+    }
+    .proj-img {
+        border-radius: 15px 15px  0 0;
+        width: auto;
+        height: 300px;
+        object-fit: cover;
+        object-position: top;
+        transition: all 0.5s;
+    }
+    .card-title {
+        background-color: #90B6EB;
+        margin: 0;
+        padding: 20px 0 5px;
+        font-family: Abhaya Libre ExtraBold serif;
+        font-style: normal;
+        font-weight: 800;
+        font-size: 33px;
+        color: #272727;
+        overflow: hidden;
+    }
+    .card-body {
+        margin: 0;
+        padding: 5px 15px;
+        background-color: #90B6EB;
+        border-radius: 0 0 15px 15px;
+        font-family: ABeeZee serif;
+        font-size: 24px;
+        color: #0F2647;
+        border-top: 1px solid #0F2647;
+    }
+    .short-desc {
+        display: table-cell;
+        vertical-align: middle;
+        height: 130px;
+    }
+    .card:hover > .proj-img {
+        height: 100px;
+        transform: scale(1.1);
+    }
+    .delete-btn {
+        border-radius: 0;
+        border: 1px solid #5a2525;
+        width: 110px;
+    }
+</style>
+</html>

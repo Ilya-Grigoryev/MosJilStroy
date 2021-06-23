@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Услуги</title>
+</head>
+<body>
+{% include 'header.html' with contacts=contacts %}
+{% include 'navbar.html' %}
+<div class="mx-5">
+    <br><br>
+    <div class="title">
+        Предоставляемые услуги
+    </div>
+    <br>
+    <div class="row services justify-content-center">
+        <div class="col flip-container">
+            <div class="flipper">
+                <div class="front serv-card">
+                    <img class="svg-img" src="{% static 'images/water-tap.svg' %}">
+                    <p class="subtitle">сантехнические <br> работы</p>
+                </div>
+                <div class="back serv-card">
+                    <p class="back-title">
+                        ремонт<br>внутридомовых<br>инженерных<br>систем
+                    </p>
+                    <div style="height: 500px;">
+                        <div class="back-item-mini">
+                            холодного
+                            и горячего
+                            водоснабжения
+                        </div>
+                        <div class="back-item-mini">
+                            холодного
+                            и горячего
+                            водоснабжения
+                        </div>
+                        <div class="back-item-mini">
+                            холодного
+                            и горячего
+                            водоснабжения
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col flip-container">
+            <div class="flipper">
+                <div class="front serv-card">
+                    <img class="svg-img" src="{% static 'images/wires.svg' %}">
+                    <p class="subtitle">электро-<br>-монтажные<br>работы</p>
+                </div>
+                <div class="back serv-card">
+                    <p class="back-title">
+                        ремонт<br>внутридомовых<br>инженерных<br>систем
+                    </p>
+                    <div style="height: 500px;">
+                        <div class="back-item-mini">
+                            электроснабжения
+                        </div>
+                        <div class="back-item-mini">
+                            слаботочных устройств
+                        </div>
+                        <div class="back-item-mini">
+                            противопожарной автоматики и систем
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col flip-container">
+            <div class="flipper">
+                <div class="front serv-card">
+                    <img class="svg-img" src="{% static 'images/house.svg' %}">
+                    <p class="subtitle">обще-<br>-строительные<br>работы</p>
+                </div>
+                <div class="back serv-card">
+                    <div style="height: 500px;">
+                        <div class="back-item">
+                            фасадные работы
+                        </div>
+                        <div class="back-item">
+                            устройство и ремонт кровли
+                        </div>
+                        <div class="back-item">
+                            прочите работы (входные группы, остекление, наружные двери, ворота и.т.д.)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="col flip-container">
+            <div class="flipper">
+                <div class="front serv-card">
+                    <img class="svg-img" src="{% static 'images/bike.svg' %}">
+                    <p class="subtitle">благоустройство</p>
+                </div>
+                <div class="back serv-card">
+                    <div style="height: 500px;">
+                        <div class="back-item">
+                            благоустройство (озеленение и малые архитектурные формы)
+                        </div>
+                        <div class="back-item">
+                            дороги и прилегающие территории
+                        </div>
+                        <div class="back-item">
+                            прочие работы
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+{% include 'footer.html' %}
+</body>
+
+<style>
+    .back-item-mini {
+        font-family: Alegreya serif;
+        font-size: 1.5vw;
+        {#padding-top: 15%;#}
+        padding-left: 15px;
+        min-height: 25%;
+        vertical-align: middle;
+        margin-bottom: 20px;
+        border-top: 1px solid #335078;
+        border-left: 1px solid #335078;
+        border-bottom: 1px solid #335078;
+    }
+    .back-item {
+        font-family: Alegreya serif;
+        font-size: 1.5vw;
+        {#padding-top: 28%;#}
+        padding-left: 15px;
+        min-height: 34%;
+        vertical-align: middle;
+        margin-bottom: 20px;
+        border-top: 1px solid #335078;
+        border-left: 1px solid #335078;
+        border-bottom: 1px solid #335078;
+    }
+    .back-title {
+        padding: 10px 0;
+        font-size: 1.5vw;
+        line-height: 27px;
+        color: #213335;
+    }
+    .flip-container {
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        perspective: 100em;
+        padding: 0;
+        margin: 0 10px;
+    }
+	.flip-container:hover .flipper, .flip-container.hover .flipper {
+		transform: rotateY(180deg);
+	}
+
+    .flip-container, .front, .back {
+        height: 44vw;
+    }
+
+    .flipper {
+        transition: 0.6s;
+        transform-style: preserve-3d;
+        position: relative;
+    }
+
+    .front, .back {
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .front {
+        z-index: 2;
+        transform: rotateY(0deg);
+    }
+
+    .back {
+        transform: rotateY(180deg);
+        text-align: left;
+        padding: 2.5vw;
+    }
+
+    .subtitle {
+        font-family: Alegreya serif;
+        font-weight: 800;
+        font-size: 2vw;
+        line-height: 35px;
+        align-items: center;
+        text-align: center;
+        vertical-align: middle;
+        margin-top: 165px;
+        color: #172728;
+    }
+    .svg-img  {
+        width: 100%;
+        padding: 0 35px;
+        margin-top: 94px;
+        height: 175px;
+        filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.35));
+    }
+    .services {
+        margin: 20px 7%;
+    }
+    .title {
+        font-family: Acme serif;
+        font-size: 36px;
+        width: 50%;
+        height: 47px;
+        border-bottom: 1px groove #3e3e3e;
+    }
+    .serv-card {
+        width: 100%;
+        background: #9EC7FF;
+        border: 4px solid #002A66;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+    }
+</style>
+</html>

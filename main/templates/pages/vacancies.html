@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Вакансии</title>
+</head>
+<body>
+{% include 'header.html' with contacts=contacts %}
+{% include 'navbar.html' %}
+<div class="alert alert-success alert-dismissible fade show" role="alert" id="vacancy-alert">
+  <strong>Ваша заявка успешно отправлена!</strong>
+  <button type="button" class="btn-close" onclick="close_alert()" aria-label="Close"></button>
+</div>
+<div class="mx-5">
+    <br><br>
+    <div class="title">
+        Практика
+    </div>
+    <br>
+    <div class="mx-5">
+        <div class="subtitle">
+            Компания МосЖилСтрой ежегодно для всех студентов предоставляет возможность проходить
+            производственную практику в отделе ПТО.
+                Чтобы записаться на прохождение практики, заполните
+                <u><strong><a download href="{{ questionnaire }}">анкету</a></strong><a href=""></a></u>
+                и отправьте её нам в форме ниже.
+        </div>
+        <br>
+        <iframe name="frame" id="frame" style="display: none;"></iframe>
+        <form action="{% url 'practice' %}" method="post" enctype="multipart/form-data" target="frame"
+              onsubmit="confirm()">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-auto">
+                    {{ practice_form.file }}
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="m-0 px-3 btn submit-btn">Отправить</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    <br><br>
+    <div class="title">
+        Вакансии
+    </div>
+    <br>
+    <div>
+        {% for vacancy in vacancies %}
+        <div class="vacancy-card">
+            <div class="row">
+                <div class="col-auto me-auto card-title">
+                    {{ vacancy.title }}
+                </div>
+                <div class="col-auto salary">
+                    {{ vacancy.salary }} ₽/мес.
+                </div>
+            </div>
+            <pre class="description">{{ vacancy.description }}</pre>
+            <div style="display: flex;
+                        justify-content: space-between;">
+                <div></div>
+                <div class="respond-btn align-text-bottom"
+                     data-bs-toggle="modal"
+                     data-bs-target="#modal{{ vacancy.id }}">Откликнуться
+                </div>
+            </div>
+
+            <div class="modal fade" id="modal{{ vacancy.id }}" tabindex="-1"
+                 aria-labelledby="modal{{ vacancy.id }}label" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="modal{{ vacancy.id }}label">{{ vacancy.title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                      <iframe name="frame" id="frame" style="display: none;"></iframe>
+                      <form action="{% url 'respond' %}" method="post" enctype="multipart/form-data" target="frame"
+                            onsubmit="confirm({{ vacancy.id }})">
+                          {% csrf_token %}
+                          {{ form.name }}
+                          {{ form.phone }}
+                          <div class="row">
+                              <div class="col-auto">
+                                  <p style="margin-top: 15px; padding-top: 5px; color: #585858; font-size: 18px;">Резюме:</p>
+                              </div>
+                              <div class="col">
+                                  {{ form.summary }}
+                              </div>
+                          </div>
+                          {{ form.answer }}
+                          <input type="hidden" name="vacancy_id" value="{{ vacancy.id }}">
+                          <button type="submit" class="btn submit-btn">Отправить</button>
+                      </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<br>
+{% include 'footer.html' %}
+</body>
+
+<script>
+    function close_alert() {
+        $(".alert").css('visibility', 'hidden');
+    }
+    function confirm(id=null) {
+        if (id !== null)
+            $(`#modal${id}`).modal('hide');
+        $(".alert").css('visibility', 'visible');
+    }
+</script>
+
+<style>
+    pre {
+        white-space: pre-wrap;
+    }
+    .alert {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 30%;
+        margin-left: 35%;
+        visibility: hidden;
+    }
+
+    .modal-title {
+        font-size: 30px;
+        border-bottom: 1px groove #3e3e3e;
+        line-height: 30px;
+        margin: 0;
+        padding: 0;
+    }
+    .submit-btn {
+        width: 100%;
+        cursor: pointer;
+        font-family: Poppins serif;
+        font-weight: 500;
+        font-size: 18px;
+        text-align: center;
+        vertical-align: middle;
+        letter-spacing: 0.01em;
+        background-color: #4A71A7;
+        color: #DDEBFF;
+        height: 38px;
+        margin: 10px 0;
+        border-radius: 0;
+        padding-top: 5px;
+        border: 1px solid #253B5A;
+        transition: 0.2s;
+    }
+    .submit-btn:hover {
+        background-color: #5A8CD1;
+        color: #ffffff;
+    }
+    .text-input {
+        border-radius: 0;
+        background-color: #EEEEEE;
+    }
+    .modal-content {
+        border-radius: 0;
+        border: 1px solid #789EA2;
+        box-sizing: border-box;
+        box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+    }
+    .respond-btn {
+        cursor: pointer;
+        font-family: Poppins serif;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 27px;
+        text-align: center;
+        vertical-align: middle;
+        letter-spacing: 0.01em;
+        background-color: #4A71A7;
+        color: #DDEBFF;
+        height: 40px;
+        width: 250px;
+        padding-top: 5px;
+        border: 1px solid #253B5A;
+        transition: 0.2s;
+    }
+    .respond-btn:hover {
+        background-color: #5A8CD1;
+        color: #ffffff;
+    }
+    .respond-btn:active {
+        background-color: #4c76b1;
+        color: #a7a7a7;
+    }
+    .description {
+        font-family: Poppins serif;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 27px;
+        letter-spacing: 0.01em;
+        color: #3b3b3b;
+        margin: 8px 30px;
+    }
+    .salary {
+        font-family: Acme serif;
+        font-size: 36px;
+        line-height: 46px;
+        color: #253B5A;
+        margin: 0 12px;
+        padding-top: 8px;
+        border-bottom: 1px solid #5077AC;
+        border-left: 1px solid #5077AC;
+        background: #ffffff;
+    }
+    .card-title {
+        font-family: Abhaya Libre ExtraBold serif;
+        font-style: normal;
+        font-weight: 800;
+        font-size: 33px;
+        line-height: 42px;
+        border-bottom: 1px solid #3e3e3e;
+        margin: 8px 30px;
+        padding: 0;
+    }
+    .vacancy-card {
+        background: #F5F5F5;
+        width: 100%;
+        margin: 30px 0;
+        border: 2px solid #5077AC;
+    }
+    .title {
+        font-family: Acme serif;
+        font-size: 36px;
+        width: 50%;
+        height: 47px;
+        border-bottom: 1px groove #3e3e3e;
+    }
+</style>
+</html>

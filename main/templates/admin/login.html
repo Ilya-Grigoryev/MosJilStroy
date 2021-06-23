@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Авторизация</title>
+</head>
+<body>
+{% include 'header.html' %}
+<div class="mx-5">
+    <div class="d-flex justify-content-evenly">
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <div class="login-form">
+                {{ form.username }}
+                {{ form.password }}
+                <button type="submit" class="btn submit-btn">Войти</button>
+            </div>
+       </form>
+    </div>
+</div>
+<br>
+{% include 'footer.html' %}
+</body>
+
+<script>
+</script>
+
+<style>
+    .alert {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 30%;
+        margin-left: 35%;
+        visibility: hidden;
+    }
+    .login-form {
+        width: 30vw;
+    }
+    .text-input {
+
+        border-radius: 0;
+        border: 1px solid #989898;
+        background-color: #EEEEEE;
+    }
+    .submit-btn {
+        cursor: pointer;
+        font-family: Poppins serif;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 27px;
+        width: 30vw;
+        text-align: center;
+        vertical-align: middle;
+        letter-spacing: 0.01em;
+        background-color: #4A71A7;
+        color: #DDEBFF;
+        border-radius: 0;
+        margin-top: 15px;
+        padding: 4px;
+        border: 1px solid #253B5A;
+        transition: 0.2s;
+    }
+    .submit-btn:hover {
+        background-color: #5A8CD1;
+        color: #ffffff;
+    }
+    .submit-btn:active {
+        background-color: #4c76b1;
+        color: #a7a7a7;
+    }
+</style>
+</html>

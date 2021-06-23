@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Руководство</title>
+</head>
+<body>
+{% include 'admin/header.html' %}
+{% include 'admin/navbar.html' %}
+<div class="mx-5">
+<br><br>
+    <div class="title">
+        Руководство
+    </div>
+    <br>
+    <div class="row justify-content-left">
+        {% for leader in leaders %}
+        <div class="card col-auto text-center p-0 m-3"
+             data-bs-toggle="modal"
+             data-bs-target="#edit_modal{{ leader.id }}">
+            <span class="avatar img-circle">
+                <img class="card-img-top card-img" src="{{ leader.image }}">
+            </span>
+            <div class="card-body" style="padding: 5px;">
+                <h5 class="card-title leader-name">{{ leader.name }}</h5>
+                <p class="card-text leader-position">{{ leader.position }}</p>
+            </div>
+        </div>
+        <div class="modal fade" id="edit_modal{{ leader.id }}" tabindex="-1"
+             aria-labelledby="edit_modal_label" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="edit_modal_label">Редактирование</h5>
+                  <form action="{% url 'admin-delete-leaders' %}" method="post">
+                      {% csrf_token %}
+                      <input name="id" type="text" value="{{ leader.id }}" hidden>
+                      <button type="submit" class="btn mx-3 delete-btn btn-danger">Удалить</button>
+                  </form>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-center">
+                  <form action="{% url 'admin-edit-leaders' %}" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <input name="name" type="text"
+                             class="form-control text-input"
+                             placeholder="Заголовок документа" value="{{ leader.name }}">
+                      <input name="position" type="text"
+                             class="form-control text-input" style="margin-top: 10px"
+                             placeholder="Заголовок документа" value="{{ leader.position }}">
+                      <input id="img_load{{ leader.id }}" name="image" type="file" style="margin-top: 10px"
+                             class="form-control text-input" accept="image/*" placeholder="Докуммент">
+                      <img src="{{ leader.image }}" id="img_show{{ leader.id }}" class="img-input">
+                      <input name="id" type="text" value="{{ leader.id }}" hidden>
+                      <button type="submit" class="btn submit-btn">Сохранить</button>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        <div class="card col-auto p-0 mx-3 add-new">
+            <div data-bs-toggle="modal"
+                 data-bs-target="#modal">
+                <img class="set-leader" src="{% static 'images/set-leader.svg' %}">
+                <p class="add-new-text">
+                    Добавить <br> нового <br> руководителя
+                </p>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modal" tabindex="-1"
+             aria-labelledby="modal_label" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modal_label">Добавить руководителя</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body text-center">
+                  <form action="{% url 'admin-leaders' %}" method="post" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      {{ form.name }}
+                      {{ form.position }}
+                      {{ form.image }}
+                      <img class="img-input" id="add-img-show" src="" alt="">
+                      <button type="submit" class="btn submit-btn">Добавить</button>
+                  </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+<br>
+{% include 'footer.html' %}
+</body>
+
+<script>
+    $("#add-img-load").change(function () {
+        if (this.files && this.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#add-img-show').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    {% for leader in leaders %}
+    $("#img_load{{ leader.id }}").change(function () {
+        if (this.files && this.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#img_show{{ leader.id }}').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    {% endfor %}
+</script>
+
+<style>
+    .add-new-text {
+        font-size: 2vw;
+        text-align: center;
+        width: 100%;
+        padding: 0 30px;
+        margin-top: 60px;
+    }
+    .add-new {
+        margin-top: 16px;
+        cursor: pointer;
+        text-align: center;
+        align-items: center;
+        border: 1px solid gray;
+        border-radius: 3px;
+        background-color: #a2a2a2;
+        transition: 0.3s;
+    }
+    .add-new:hover{
+        background-color: #626262;
+    }
+    .set-leader {
+        margin-top: 24px;
+        width: 12vw;
+        height: 12vw;
+    }
+    .title {
+        font-family: Acme serif;
+        font-size: 36px;
+        width: 50%;
+        height: 47px;
+        border-bottom: 1px groove #3e3e3e;
+    }
+    .text-input {
+        border-radius: 0;
+        background-color: #EEEEEE;
+    }
+    .modal-content {
+        border-radius: 0;
+        border: 1px solid #789EA2;
+        box-sizing: border-box;
+        box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
+    }
+    .set-image {
+        height: 200px;
+        object-fit: cover;
+    }
+    .submit-btn {
+        width: 100%;
+        cursor: pointer;
+        font-family: Poppins serif;
+        font-weight: 500;
+        font-size: 18px;
+        text-align: center;
+        vertical-align: middle;
+        letter-spacing: 0.01em;
+        background-color: #4A71A7;
+        color: #DDEBFF;
+        height: 38px;
+        margin: 10px 0;
+        border-radius: 0;
+        padding-top: 5px;
+        border: 1px solid #253B5A;
+        transition: 0.2s;
+    }
+    .submit-btn:hover {
+        background-color: #5A8CD1;
+        color: #ffffff;
+    }
+    .container {
+        margin-left: 30px;
+    }
+    .card {
+        height: 35vw;
+        width: 25vw;
+        text-align: center;
+        border: 3px solid #002A66;
+        box-sizing: border-box;
+        border-radius: 4px;
+        transition: 0.2s;
+        cursor: pointer;
+    }
+    .card:hover {
+        filter: brightness(90%);
+    }
+    .title {
+        font-family: Acme serif;
+        font-size: 36px;
+        width: 50%;
+        height: 47px;
+        border-bottom: 1px groove #3e3e3e;
+    }
+    .card-img {
+        margin-top: 24px;
+        width: 20vw;
+        height: 20vw;
+        object-fit: cover;
+        {#object-position: top;#}
+        {#border-radius: 50%;#}
+        border: 1px inset #002A66;
+    }
+    .leader-name {
+        font-family: Alegreya serif;
+        font-size: 2.4vw;
+        text-align: center;
+        width: 100%;
+        padding: 0 30px;
+        margin-top: 10px;
+    }
+    .leader-position {
+        font-family: Acme serif;
+        font-size: 1.7vw;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.58);
+        padding: 0 30px;
+        margin-top: 7%;
+    }
+    .img-input {
+        max-width: 300px;
+        max-height: 300px;
+        margin-top: 10px;
+        object-fit: cover;
+    }
+    .delete-btn {
+        border-radius: 0;
+        border: 1px solid #5a2525;
+        width: 110px;
+    }
+</style>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Контакты</title>
+</head>
+<body>
+{% include 'header.html' with contacts=contacts %}
+{% include 'navbar.html' %}
+<div class="alert alert-success alert-dismissible fade show" role="alert" id="vacancy-alert">
+  <strong>Ваш вопрос успешно отправлен!</strong>
+  <button type="button" class="btn-close" onclick="close_alert()" aria-label="Close"></button>
+</div>
+<div class="mx-5">
+    <br><br>
+    <div class="title">
+        Контакты и главный офис
+    </div>
+    <br>
+    <div>
+        <div class="row">
+            <div class="col-auto">
+                <span class="iconify icon" data-icon="mdi-phone-in-talk" data-inline="false"></span>
+            </div>
+            <div class="col-auto">
+                <strong class="contacts">{{ contacts.phone }}</strong>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-auto">
+                <span class="iconify icon" data-icon="mdi-email" data-inline="false"></span>
+            </div>
+            <div class="col-auto">
+                <strong class="contacts">{{ contacts.mail }}</strong>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-auto">
+                <span class="iconify icon" data-icon="mdi-map-marker" data-inline="false"></span>
+            </div>
+            <div class="col-auto">
+                <strong class="contacts">{{ contacts.address }}</strong>
+            </div>
+        </div>
+        <br>
+        <div class="map row">
+            <div class="col">
+                <iframe src='https://maps.google.com/maps?&q={{ contacts.address }}&output=embed'
+                        width="100%" height="450px" style="border: 1px solid #0F2647; border-radius: 9px;"></iframe>
+            </div>
+            <div class="col-auto">
+                <img class="office-img" src="{{ contacts.office_image }}">
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <div class="title">
+        Задать вопрос
+    </div>
+    <br>
+    <iframe name="frame" id="frame" style="display: none;"></iframe>
+    <form action="{% url 'question' %}" method="post" enctype="multipart/form-data" target="frame"
+          onsubmit="confirm()">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col">
+                {{ form.name }}
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn submit-btn">Отправить</button>
+            </div>
+        </div>
+        {{ form.mail }}
+        {{ form.theme }}
+        {{ form.text }}
+    </form>
+</div>
+<br>
+{% include 'footer.html' %}
+</body>
+
+<script>
+    function close_alert() {
+        $(".alert").css('visibility', 'hidden');
+    }
+    function confirm() {
+         $(".alert").css('visibility', 'visible');
+    }
+</script>
+
+<style>
+    .alert {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 30%;
+        margin-left: 35%;
+        visibility: hidden;
+    }
+    .office-img  {
+        width: 30vw;
+        object-fit: cover;
+        height: 450px;
+        border: 2px solid #002A66;
+        border-radius: 9px;
+    }
+    .contacts {
+        font-size: 20px;
+        color: #243854;
+    }
+    .title {
+        font-family: Acme serif;
+        font-size: 36px;
+        width: 50%;
+        height: 47px;
+        border-bottom: 1px groove #3e3e3e;
+    }
+    .text-input {
+        border-radius: 0;
+        border: 1px solid #989898;
+        background-color: #EEEEEE;
+    }
+    .submit-btn {
+        width: 30vw;
+        cursor: pointer;
+        font-family: Poppins serif;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 27px;
+        text-align: center;
+        vertical-align: middle;
+        letter-spacing: 0.01em;
+        background-color: #4A71A7;
+        color: #DDEBFF;
+        border-radius: 0;
+        margin-top: 15px;
+        padding: 4px;
+        border: 1px solid #253B5A;
+        transition: 0.2s;
+    }
+    .submit-btn:hover {
+        background-color: #5A8CD1;
+        color: #ffffff;
+    }
+    .submit-btn:active {
+        background-color: #4c76b1;
+        color: #a7a7a7;
+    }
+</style>
+</html>

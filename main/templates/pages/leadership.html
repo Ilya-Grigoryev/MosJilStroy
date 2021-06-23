@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Руководство</title>
+</head>
+<body>
+{% include 'header.html' with contacts=contacts %}
+{% include 'navbar.html' %}
+<div class="mx-5">
+<br><br>
+    <div class="title">
+        Руководство
+    </div>
+    <br>
+    <div class="row justify-content-left">
+        {% for leader in leaders %}
+        <div class="card col-auto text-center p-0 m-3">
+            <span class="avatar img-circle">
+                <img class="card-img-top card-img" src="{{ leader.image }}">
+            </span>
+            <div class="card-body" style="padding: 5px;">
+                <h5 class="card-title leader-name">{{ leader.name }}</h5>
+                <p class="card-text leader-position">{{ leader.position }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<br>
+{% include 'footer.html' %}
+</body>
+
+<style>
+    .container {
+        margin-left: 30px;
+    }
+    .card {
+        height: 35vw;
+        width: 25vw;
+        text-align: center;
+        border: 3px solid #002A66;
+        box-sizing: border-box;
+        border-radius: 4px;
+    }
+    .title {
+        font-family: Acme serif;
+        font-size: 36px;
+        width: 50%;
+        height: 47px;
+        border-bottom: 1px groove #3e3e3e;
+    }
+    .card-img {
+        margin-top: 24px;
+        width: 20vw;
+        height: 20vw;
+        object-fit: cover;
+        {#object-position: top;#}
+        {#border-radius: 50%;#}
+        border: 1px inset #002A66;
+    }
+    .leader-name {
+        font-family: Alegreya serif;
+        font-size: 2.4vw;
+        text-align: center;
+        width: 100%;
+        padding: 0 30px;
+        margin-top: 10px;
+    }
+    .leader-position {
+        font-family: Acme serif;
+        font-size: 1.7vw;
+        text-align: center;
+        color: rgba(0, 0, 0, 0.58);
+        padding: 0 30px;
+        margin-top: 7%;
+    }
+</style>
+</html>

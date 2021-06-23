@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>Контакты</title>
+</head>
+<body>
+{% include 'admin/header.html' %}
+{% include 'admin/navbar.html' %}
+</div>
+<div class="mx-5">
+    <br><br>
+    <div class="title">
+        Контакты и главный офис
+    </div>
+    <br>
+    <form class="mx-5" action="{% url 'admin-contacts' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col">
+                <div class="row">
+                    <div class="col-auto">
+                        <span class="iconify icon" data-icon="mdi-phone-in-talk" data-inline="false"></span>
+                    </div>
+                    <div class="col-auto">
+                        <input name="phone" type="text" style="width: 400px;"
+                               class="form-control text-input"
+                               placeholder="Телефон" value="{{ contacts.phone }}">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-auto">
+                        <span class="iconify icon" data-icon="mdi-email" data-inline="false"></span>
+                    </div>
+                    <div class="col-auto">
+                        <input name="mail" type="text" style="width: 400px;"
+                               class="form-control text-input"
+                               placeholder="Почта" value="{{ contacts.mail }}">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-auto">
+                        <span class="iconify icon" data-icon="mdi-map-marker" data-inline="false"></span>
+                    </div>
+                    <div class="col-auto">
+                        <input name="address" type="text" style="width: 400px;"
+                               class="form-control text-input"
+                               placeholder="Адресс" value="{{ contacts.address }}">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-auto">
+                        <span class="iconify icon" data-icon="mdi-bell" data-inline="false"></span>
+                    </div>
+                    <div class="col-auto">
+                        <input name="notifications" type="text" style="width: 400px;"
+                               class="form-control text-input"
+                               placeholder="Почта для уведомлений о новых заявках" value="{{ contacts.notifications }}">
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto">
+                <input id="office_img_load" name="office_image" type="file" style="margin-top: 10px"
+                       class="m-0 form-control text-input" accept="image/*" placeholder="Докуммент">
+                <img src="{{ contacts.office_image }}" id="office_img_show" class="img-input">
+            </div>
+        </div>
+        <button type="submit" class="w-100 btn submit-btn">Сохранить</button>
+    </form>
+    <br><br>
+    <div class="title">
+        Описание
+    </div>
+    <br>
+    <div class="mx-5">
+        <form action="{% url 'admin-about-save' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <textarea class="col w-100 form-control text-input"  name="text" rows="15"
+                >{{ about.text }}</textarea>
+                <div class="col-auto">
+                    <input id="about_img_load" name="image" type="file" style="margin-top: 10px"
+                           class="m-0 form-control text-input" accept="image/*" placeholder="Докуммент">
+                    <img src="{{ about.image }}" id="about_img_show" class="img-input">
+                </div>
+            </div>
+            <button type="submit" class="btn submit-btn w-100">Сохранить</button>
+        </form>
+    </div>
+    <br><br>
+    <div class="title">
+        Новые вопросы
+    </div>
+    <br>
+    <div class="mx-5">
+        {% for question in new_questions %}
+            <form id="question{{ question.id }}" action="{% url 'admin-set-answer' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="card border-dark mb-3" style="max-width: 100%">
+                  <div class="card-header bg-transparent border-dark" style="height: 100%;">
+                      <div class="d-flex justify-content-between">
+                          <p class="w-100"
+                             style="font-size: 20px; padding-top: 5px; margin: 0;">
+                              Автор: {{ question.name }} <i>({{ question.mail }})</i>
+                          </p>
+                          <button type="submit" class="btn submit-btn"
+                                  style="width: 300px; margin-top: 0;">Отправить ответ</button>
+                          <img class="btn-icon" src="{% static 'images/delete.svg' %}" alt="delete.svg"
+                               onclick="delete_question('{{ question.id }}')">
+                      </div>
+                  </div>
+                  <div class="card-body text-dark">
+                    <h5 class="card-title">Тема: <q>{{ question.theme }}</q></h5>
+                    <p class="card-text">{{ question.text }}</p>
+                  </div>
+                  <div class="card-footer bg-transparent border-dark">
+                      <textarea name="answer" rows="7" class="text-input form-control"
+                                placeholder="Ответ на вопрос" required
+                                style="width: 100%;"></textarea>
+                      <input name="question_id" type="text" value="{{ question.id }}" hidden>
+                  </div>
+                </div>
+            </form>
+        {% endfor %}
+    </div>
+
+    <br><br>
+    <div class="title">
+        Отвеченные вопросы
+    </div>
+    <br>
+    <div class="mx-5">
+        {% for question in answered_questions %}
+            <div id="question{{ question.id }}">
+                <div class="card border-dark mb-3" style="max-width: 100%">
+                  <div class="card-header bg-transparent border-dark" style="height: 100%;">
+                      <div class="d-flex justify-content-between">
+                          <p class="w-100"
+                             style="font-size: 20px; padding-top: 5px; margin: 0;">
+                              Автор: {{ question.name }} <i>({{ question.mail }})</i>
+                          </p>
+                          <img class="btn-icon" src="{% static 'images/delete.svg' %}" alt="delete.svg"
+                               onclick="delete_question('{{ question.id }}')">
+                      </div>
+                  </div>
+                  <div class="card-body text-dark">
+                    <h5 class="card-title">Тема: <q>{{ question.theme }}</q></h5>
+                    <p class="card-text">{{ question.text }}</p>
+                  </div>
+                  <div class="card-footer bg-transparent border-dark">
+                      <p>{{ question.answer }}</p>
+                  </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<br>
+{% include 'footer.html' %}
+</body>
+
+<script>
+    function delete_question(question_id) {
+        let form_data = new FormData();
+        form_data.append("question_id", question_id);
+        form_data.append("csrfmiddlewaretoken", '{{ csrf_token }}');
+        $.ajax({
+         url: '{% url 'admin-del-question' %}',
+         type: 'post',
+         data: form_data,
+         dataType: 'json',
+         contentType: false,
+         processData: false,
+         success: () => {
+             $( `#question${question_id}` ).remove();
+         }
+        });
+    }
+    $("#about_img_load").change(function () {
+        if (this.files && this.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#about_img_show').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    $("#office_img_load").change(function () {
+        if (this.files && this.files[0]) {
+            let reader = new FileReader();
+            reader.onload = function (e) {
+                $('#office_img_show').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+</script>
+
+<style>
+    .img-input {
+        max-width: 360px;
+        margin-top: 10px;
+        object-fit: cover;
+    }
+    pre {
+        white-space: pre-wrap;
+    }
+    .office-img  {
+        width: 30vw;
+        object-fit: cover;
+        height: 450px;
+        border: 2px solid #002A66;
+        border-radius: 9px;
+    }
+    .contacts {
+        font-size: 20px;
+        color: #243854;
+    }
+    .title {
+        font-family: Acme serif;
+        font-size: 36px;
+        width: 50%;
+        height: 47px;
+        border-bottom: 1px groove #3e3e3e;
+    }
+    .text-input {
+        border-radius: 0;
+        border: 1px solid #989898;
+        background-color: #EEEEEE;
+    }
+    .submit-btn {
+        width: 30vw;
+        cursor: pointer;
+        font-family: Poppins serif;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 27px;
+        text-align: center;
+        vertical-align: middle;
+        letter-spacing: 0.01em;
+        background-color: #4A71A7;
+        color: #DDEBFF;
+        border-radius: 0;
+        margin-top: 15px;
+        padding: 4px;
+        border: 1px solid #253B5A;
+        transition: 0.2s;
+    }
+    .submit-btn:hover {
+        background-color: #5A8CD1;
+        color: #ffffff;
+    }
+    .submit-btn:active {
+        background-color: #4c76b1;
+        color: #a7a7a7;
+    }
+    .btn-icon {
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 20%;
+        transition: 0.3s;
+        margin-top: 2px;
+        margin-right: -10px;
+        margin-left: 5px;
+    }
+    .btn-icon:hover {
+        background-color: #cdcdcd;
+    }
+    .btn-icon:active {
+        background-color: gray;
+    }
+</style>
+</html>

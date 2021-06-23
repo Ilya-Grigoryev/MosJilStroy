@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Наши проекты</title>
+</head>
+<body>
+{% include 'header.html' with contacts=contacts %}
+{% include 'navbar.html' %}
+<div class="mx-5">
+    <br><br>
+    <div class="title">
+        Текущие проекты
+    </div>
+    <br>
+    <div class="row mx-1">
+        {% for project in current %}
+        <a class="link m-3" href="/project/{{ project.id }}">
+            <div class="col-md-auto card px-0">
+                <img src="{{ project.image }}" class="card-img-top proj-img">
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.address}}</h5>
+                    <hr>
+                    <p class="short-desc">{{ project.short_description }}</p>
+                    <hr>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    <br><br>
+    <div class="title">
+        Сданные объекты
+    </div>
+    <br>
+    <div class="row mx-1">
+        {% for project in past %}
+        <a class="link m-3" href="/project/{{ project.id }}">
+            <div class="col-md-auto card px-0">
+                <img src="{{ project.image }}" class="card-img-top proj-img">
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.address}}</h5>
+                    <hr>
+                    <p class="short-desc">{{ project.short_description }}</p>
+                    <hr>
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+<br>
+{% include 'footer.html' %}
+</body>
+
+<style>
+    .link {
+        width: auto;
+        margin: 0;
+        padding: 0;
+    }
+    .title {
+        font-family: Acme serif;
+        font-size: 36px;
+        width: 50%;
+        height: 47px;
+        border-bottom: 1px groove #3e3e3e;
+    }
+    .card {
+        width: 600px;
+        height: 400px;
+        border-radius: 15px;
+        overflow: hidden;
+        border: 1px solid #0F2647;
+    }
+    .proj-img {
+        border-radius: 15px 15px  0 0;
+        width: auto;
+        height: 300px;
+        object-fit: cover;
+        object-position: top;
+        transition: all 0.5s;
+    }
+    .card-title {
+        background-color: #90B6EB;
+        margin: 0;
+        padding: 20px 0 5px;
+        font-family: Abhaya Libre ExtraBold serif;
+        font-style: normal;
+        font-weight: 800;
+        font-size: 33px;
+        color: #272727;
+        overflow: hidden;
+    }
+    .card-body {
+        margin: 0;
+        padding: 5px 15px;
+        background-color: #90B6EB;
+        border-radius: 0 0 15px 15px;
+        font-family: ABeeZee serif;
+        font-size: 24px;
+        color: #0F2647;
+        border-top: 1px solid #0F2647;
+    }
+    .short-desc {
+        display: table-cell;
+        vertical-align: middle;
+        height: 130px;
+    }
+    .card:hover > .proj-img {
+        height: 100px;
+        transform: scale(1.1);
+    }
+</style>
+</html>

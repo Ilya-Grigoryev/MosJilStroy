@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Navbar</title>
+</head>
+<body>
+    <div class="row navigation mx-5">
+        {% url 'admin-documents' as docs %}
+        <a class="col nav-item tab {% if request.path == docs %} selected {% endif %}"
+           href="{{ docs }}">
+            <div class="nav-text">Документы</div>
+        </a>
+
+        {% url 'admin-leaders' as leaders %}
+        <a class="col nav-item tab {% if request.path == leaders %} selected {% endif %}"
+           href="{{ leaders }}">
+            <div class="nav-text">Руководство</div>
+        </a>
+
+        {% url 'admin-projects' as projects %}
+        <a class="col nav-item tab {% if request.path == projects %} selected {% endif %}"
+           href="{{ projects }}">
+            <div class="nav-text">Наши проекты</div>
+        </a>
+
+        {% url 'admin-vacancies' as vacancies %}
+        <a class="col nav-item tab {% if request.path == vacancies %} selected {% endif %}"
+           href="{{ vacancies }}">
+            <div class="nav-text">Вакансии</div>
+        </a>
+
+        {% url 'admin-contacts' as contacts %}
+        <a class="col nav-item tab {% if request.path == contacts %} selected {% endif %}"
+           href="{{ contacts }}">
+            <div class="nav-text">Контакты</div>
+        </a>
+    </div>
+</body>
+
+<style>
+    body {
+        background-color: rgb(248, 249, 250);
+    }
+    a {
+        text-decoration: none;
+    }
+    a:hover {
+        color: #DDEBFF;
+    }
+    .nav-text {
+        color: #DDEBFF;
+        font-family: ABeeZee, serif;
+        font-size: 24px;
+    }
+    .tab {
+        background-color: #2D61A8;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .selected {
+        border: 1px solid #DDEBFF;
+        box-sizing: border-box;
+        box-shadow: inset 0 4px 4px rgba(51, 80, 83, 0.5);
+        background: #5281C2;
+    }
+    .tab:hover {
+        background-color: #5A8CD1;
+    }
+    .navigation {
+        height: 40px;
+    }
+</style>
+</html>
