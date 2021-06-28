@@ -10,7 +10,8 @@
 </head>
 <body class="body">
     <nav class="navbar navbar-light bg-light head" id="up">
-        <a class="navbar-brand">
+        {% url 'root' as root %}
+        <a class="navbar-brand" href="{{ root }}">
             <img class="logo" src="{% static 'images/logo.png' %}" alt="logo">
         </a>
         <span class="navbar-text info">

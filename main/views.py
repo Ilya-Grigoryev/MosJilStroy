@@ -71,7 +71,7 @@ def send_answer(data):
 <strong>Ответ:</strong> {data.answer} <br><br>
 '''
     send_mail('Ответ на вопрос "МосЖилСтрой"',
-              body, 'questions.mosjilstroy@mail.ru', [data.mail], html_message=html)
+              body, 'questions@mosjilstroy.ru', [data.mail], html_message=html)
 
 
 def send_notification(title):
@@ -91,11 +91,18 @@ def send_notification(title):
 <p>Ознакомиться с этой новостью можно в панели адмминистратора <a href="mosjilstroy.ru/admin/">mosjilstroy.ru/admin/</a></p>
 '''
     send_mail('Уведомление с сайта "МосЖилСтрой"',
-              body, 'questions.mosjilstroy@mail.ru',
+              body, 'questions@mosjilstroy.ru',
               [get_notify_mail_from_json()], html_message=html)
 
 
 #  USER
+
+def root(request):
+    info = get_contacts_from_json()
+    about_ctx = get_about_from_json()
+    return render(request, 'pages/root.html', {'contacts': info,
+                                               'about': about_ctx})
+
 
 def about(request):
     info = get_contacts_from_json()
@@ -272,7 +279,9 @@ def admin_login(request):
     if request.method == 'GET':
         if request.user.is_authenticated:
             return HttpResponseRedirect('/admin/')
-        return render(request, 'admin/login.html', {'form': LoginForm()})
+        info = get_contacts_from_json()
+        return render(request, 'admin/login.html', {'contacts': info,
+                                                    'form': LoginForm()})
     elif request.method == 'POST':
         login_form = LoginForm(request.POST, request.FILES)
         if not login_form.is_valid():

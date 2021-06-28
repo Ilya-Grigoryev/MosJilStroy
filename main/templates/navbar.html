@@ -5,49 +5,48 @@
     <title>Navbar</title>
 </head>
 <body>
-    <div class="row navigation mx-5">
-        {% url 'about' as about %}
-        <a class="col nav-item tab {% if request.path == about %} selected {% endif %}"
-           href="{{ about }}">
-            <div class="nav-text">О компании</div>
-        </a>
+    <div style="background-color: rgb(248, 249, 250);">
+        <div class="row navigation mx-5">
+            {% url 'about' as about %}
+            <a class="col nav-item tab {% if request.path == about %} selected {% endif %}"
+               href="{{ about }}">
+                <div class="nav-text">Благодарности</div>
+            </a>
 
-        {% url 'leaders' as leaders %}
-        <a class="col nav-item tab {% if request.path == leaders %} selected {% endif %}"
-           href="{{ leaders }}">
-            <div class="nav-text">Руководство</div>
-        </a>
+            {% url 'leaders' as leaders %}
+            <a class="col nav-item tab {% if request.path == leaders %} selected {% endif %}"
+               href="{{ leaders }}">
+                <div class="nav-text">Руководство</div>
+            </a>
 
-        {% url 'projects' as projects %}
-        <a class="col nav-item tab {% if request.path == projects %} selected {% endif %}"
-           href="{{ projects }}">
-            <div class="nav-text">Наши проекты</div>
-        </a>
+            {% url 'projects' as projects %}
+            <a class="col nav-item tab {% if request.path == projects %} selected {% endif %}"
+               href="{{ projects }}">
+                <div class="nav-text">Наши проекты</div>
+            </a>
 
-        {% url 'services' as services %}
-        <a class="col nav-item tab {% if request.path == services %} selected {% endif %}"
-           href="{{ services }}">
-            <div class="nav-text">Услуги</div>
-        </a>
+            {% url 'services' as services %}
+            <a class="col nav-item tab {% if request.path == services %} selected {% endif %}"
+               href="{{ services }}">
+                <div class="nav-text">Услуги</div>
+            </a>
 
-        {% url 'vacancies' as vacancies %}
-        <a class="col nav-item tab {% if request.path == vacancies %} selected {% endif %}"
-           href="{{ vacancies }}">
-            <div class="nav-text">Вакансии</div>
-        </a>
+            {% url 'vacancies' as vacancies %}
+            <a class="col nav-item tab {% if request.path == vacancies %} selected {% endif %}"
+               href="{{ vacancies }}">
+                <div class="nav-text">Вакансии</div>
+            </a>
 
-        {% url 'contacts' as contacts %}
-        <a class="col nav-item tab {% if request.path == contacts %} selected {% endif %}"
-           href="{{ contacts }}">
-            <div class="nav-text">Контакты</div>
-        </a>
+            {% url 'contacts' as contacts %}
+            <a class="col nav-item tab {% if request.path == contacts %} selected {% endif %}"
+               href="{{ contacts }}">
+                <div class="nav-text">Контакты</div>
+            </a>
+        </div>
     </div>
 </body>
 
 <style>
-    body {
-        background-color: rgb(248, 249, 250);
-    }
     a {
         text-decoration: none;
     }

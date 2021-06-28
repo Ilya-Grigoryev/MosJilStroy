@@ -5,7 +5,7 @@
     <title>Авторизация</title>
 </head>
 <body>
-{% include 'header.html' %}
+{% include 'header.html' with contacts=contacts %}
 <div class="mx-5">
     <div class="d-flex justify-content-evenly">
         <form method="post" action="{% url 'login' %}">
@@ -19,9 +19,9 @@
     </div>
 </div>
 <br>
-{% include 'footer.html' %}
 </body>
 
+{% include 'footer.html' %}
 <script>
 </script>
 

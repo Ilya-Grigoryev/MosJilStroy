@@ -11,23 +11,12 @@
 <div class="mx-5">
     <br><br>
     <div class="title">
-        Описание
-    </div>
-    <br>
-    <div class="row justify-space-between">
-        <pre class="col">{{ about.text }}</pre>
-        <div class="col-md-auto">
-            <img class="about-image" src="{{ about.image }}" alt="about image">
-        </div>
-    </div>
-    <br><br>
-    <div class="title">
         Лицензии и благодарности
     </div>
     <br>
     <div class="row justify-left align-items-end">
         {% for doc in documents %}
-        <div class="card doc-card col-auto p-0 mx-3 mb-3"
+        <div class="card doc-card col-auto p-0 m-3 mb-3"
              data-bs-toggle="modal"
              data-bs-target="#edit_modal{{ doc.id }}">
             <img class="card-img-top card-img" src="{{ doc.image }}">
@@ -69,12 +58,6 @@
     }
     .doc-card:active {
         border: 1px solid #393939;
-    }
-    .about-image {
-        width: 406px;
-        height: 281px;
-        border-radius: 5px;
-        object-fit: cover;
     }
     .title {
         font-family: Acme serif;

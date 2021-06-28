@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>МосЖилСтрой</title>
+</head>
+<body>
+{% include 'header.html' with contacts=contacts %}
+{% include 'navbar.html' %}
+<img src="{% static 'images/angle.png' %}" alt="angle" class="angle">
+<div class="mx-5 cont">
+    <br><br>
+    <p class="paragraph">более <strong>40</strong> сданных объектов</p>
+    <p class="paragraph">с <strong>2016</strong> года радуем вас хорошим ремонтом</p>
+    <p class="paragraph"><strong>3</strong> отремонтированные дороги</p>
+    <p class="paragraph">более <strong>1000</strong> довольных клиентов</p>
+    <h1 class="high-title">КАЧЕСТВЕННЫЙ  РЕМОНТ  ДОМОВ</h1>
+    <br>
+    <p class="paragraph" style="text-align: right">
+        удобные и красивые парки возле вашего дома <br>
+        квалифицированные сотрудники <br>
+        множество положительных отзывов<br>
+    </p>
+    <div class="title">
+        Описание
+    </div>
+    <br>
+    <div class="row justify-space-between">
+        <div class="col-md-auto">
+            <img class="about-image" src="{{ about.image }}" alt="about image">
+        </div>
+        <pre class="col about-text">{{ about.text }}</pre>
+    </div>
+    <br><br>
+</div>
+{% include 'footer.html' %}
+</body>
+
+<style>
+    @font-face {
+        font-family: HighTitle;
+        src: url({% static 'files/high-title-font.otf' %});
+    }
+    @font-face {
+        font-family: Paragraph;
+        src: url({% static 'files/paragraph-font.otf' %});
+    }
+    .angle {
+        position: absolute;
+        opacity: 0.25;
+        z-index: 1;
+        height: 500px;
+        width: 40vw;
+    }
+    strong {
+        color: #4C6F9A;
+        font-size: 3.3vw;
+    }
+    .paragraph {
+        position: relative;
+        font: normal 2.2vw Paragraph;
+        z-index: 100;
+    }
+    .high-title {
+        font: normal 4.4vw HighTitle;
+        letter-spacing: 7px;
+        text-align: right;
+        z-index: 100;
+    }
+    body {
+        background-image: url("{% static 'images/bg-image.png' %}");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }
+    pre {
+        white-space: pre-wrap;
+    }
+    .doc-card {
+        cursor: pointer;
+        transition: 0.2s;
+    }
+    .doc-card:hover {
+        filter: brightness(90%);
+    }
+    .doc-card:active {
+        border: 1px solid #393939;
+    }
+    .about-image {
+        width: 27vw;
+        height: 35vw;
+        border-radius: 5px;
+        object-fit: cover;
+    }
+    .about-text {
+        margin-left: 25px;
+        font-size: 1.2vw;
+        max-width: 60vw;
+    }
+    .title {
+        font-family: Acme serif;
+        font-size: 2vw;
+        width: 50%;
+        height: 2.8vw;
+        border-bottom: 1px groove #3e3e3e;
+    }
+    .card-img {
+        max-height: 300px;
+        max-width: 270px;
+        object-fit: cover;
+        object-position: top;
+    }
+    .card-text {
+        font-family: Crimson Text, serif;
+        text-align: center;
+        font-size: 20px;
+        color: #727272;
+        max-width: 300px;
+    }
+</style>
+</html>
